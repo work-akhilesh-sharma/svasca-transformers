@@ -1,26 +1,240 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #061716;
+  --bg-deep: #04100f;
+  --raised: #0a1f21;
+  --panel: #0b2326;
+  --line: rgba(0, 181, 204, 0.18);
+  --line-soft: rgba(141, 208, 214, 0.08);
+  --ink: #e6f2f1;
+  --muted: #9ab5b4;
+  --faint: #6b8f8d;
+  --cyan: #00b5cc;
+  --blue: #0787c8;
+  --green: #8cc63f;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-raised: var(--raised);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-cyan: var(--cyan);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --font-display: var(--font-space-grotesk), ui-sans-serif, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(0, 181, 204, 0.35);
+  color: var(--ink);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* ---------- technical primitives ---------- */
+
+.tech-label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.grid-overlay {
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.glow-radial {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 100%,
+    rgba(0, 181, 204, 0.12),
+    transparent 70%
+  );
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  min-height: 44px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background: var(--cyan);
+  color: var(--bg-deep);
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: var(--green);
+}
+
+.btn-ghost {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* ---------- media loading / effects ---------- */
+
+.media-loading {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: var(--raised);
+  background-size: cover;
+  background-position: center;
+}
+
+.media-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 181, 204, 0.09) 50%,
+    transparent 100%
+  );
+  animation: scan 2.4s linear infinite;
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.blink {
+  animation: blink 1.6s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes scrolldot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(2.25rem);
+    opacity: 0;
+  }
+}
+
+.scroll-dot {
+  animation: scrolldot 1.9s ease-in-out infinite;
+}
+
+.dash-flow {
+  stroke-dasharray: 6 10;
+  animation: dashflow 1.1s linear infinite;
+}
+
+@keyframes dashflow {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+/* ---------- sticky step states ---------- */
+
+[data-motion="on"] [data-step] {
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+}
+
+[data-motion="on"] [data-step][data-active="true"] {
+  opacity: 1;
+}
+
+[data-step] .step-code {
+  color: var(--faint);
+  transition: color 0.5s ease;
+}
+
+[data-step][data-active="true"] .step-code {
+  color: var(--cyan);
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .blink,
+  .dash-flow,
+  .scroll-dot,
+  .media-loading::after {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
 }
